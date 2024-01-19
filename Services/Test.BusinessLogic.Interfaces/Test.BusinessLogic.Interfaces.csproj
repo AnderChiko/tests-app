@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Context\Test.Context\Test.Context.csproj" />
+    <ProjectReference Include="..\..\Core\Test.Core.Interfaces\Test.Core.Interfaces.csproj" />
+    <ProjectReference Include="..\Test.BusinessLogic.Models\Test.BusinessLogic.Models.csproj" />
+  </ItemGroup>
+
+</Project>
