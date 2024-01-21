@@ -2,19 +2,24 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/Context/Test.Context/bin/Debug/net6.0
-/.vs/Test/FileContentIndex
+/.vs
 /Context/Test.Context/obj
+/Context/Tests/Test.Context.Unit.Tests/bin/Debug/net6.0
+/Context/Tests/Test.Context.Unit.Tests/obj
 /Core/Test.Core/bin/Debug/net6.0
 /Core/Test.Core/obj
 /Core/Test.Core.Interfaces/bin/Debug/net6.0
 /Core/Test.Core.Interfaces/obj
 /Core/Test.Core.Models/bin/Debug/net6.0
 /Core/Test.Core.Models/obj
+/Core/Test.Core.Testing/bin/Debug/net6.0
+/Core/Test.Core.Testing/obj/Debug
 /Core/Test.Core.Testing/obj
 /Core/Tests/Test.Intergrational.Tests/bin/Debug/net6.0
+/Core/Tests/Test.Intergrational.Tests/obj/Debug/net6.0
 /Core/Tests/Test.Intergrational.Tests/obj
 /Core/Tests/Test.Unit.Tests/bin/Debug/net6.0
+/Core/Tests/Test.Unit.Tests/obj/Debug/net6.0
 /Core/Tests/Test.Unit.Tests/obj
 /Hosts/Test.WebApi/bin/Debug/net6.0
 /Hosts/Test.WebApi/obj
@@ -23,9 +28,7 @@
 /Services/Test.BusinessLogic.Interfaces/bin/Debug/net6.0
 /Services/Test.BusinessLogic.Interfaces/obj
 /Services/Test.BusinessLogic.Models/bin/Debug/net6.0
+/Services/Test.BusinessLogic.Models/obj/Debug/net6.0
 /Services/Test.BusinessLogic.Models/obj
 /Services/Tests/Test.BusinessLogic.Unit.Tests/bin/Debug/net6.0
 /Services/Tests/Test.BusinessLogic.Unit.Tests/obj
-/.vs/Test/v17
-/.vs/Test/DesignTimeBuild
-/.vs/ProjectEvaluation
