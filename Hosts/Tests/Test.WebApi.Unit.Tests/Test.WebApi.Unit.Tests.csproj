@@ -9,24 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="appsettings.Development.json" />
-    <None Remove="appsettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.Development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="Moq.EntityFrameworkCore" Version="6.0.1.4" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -42,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\Test.Core.Testing\Test.Core.Testing.csproj" />
+    <ProjectReference Include="..\..\Test.WebApi\Test.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

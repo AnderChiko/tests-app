@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Test.BusinessLogic.Authentication;
+using Test.BusinessLogic.Interfaces;
 using Test.BusinessLogic.Models.Authentication;
 using Test.Core.Models;
 using Test.Core.Models.Data;
