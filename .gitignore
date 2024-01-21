@@ -33,3 +33,5 @@
 /Services/Tests/Test.BusinessLogic.Unit.Tests/bin/Debug/net6.0
 /Services/Tests/Test.BusinessLogic.Unit.Tests/obj
 /Context/Test.Context/bin/Debug/net6.0
+/Hosts/Tests/Test.WebApi.Unit.Tests/bin/Debug/net6.0
+/Hosts/Tests/Test.WebApi.Unit.Tests/obj
