@@ -13,6 +13,8 @@ using Newtonsoft.Json.Serialization;
 using Test.Core.Extensions;
 using Test.WebApi.PolicyHandlers;
 using Test.BusinessLogic.Configuration;
+using Test.Core.ErrorHandling;
+using Test.Context.Models;
 
 namespace Test.WebApi
 {
@@ -28,6 +30,8 @@ namespace Test.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetSection("MyDb"));
+
             services.AddServices(Configuration);
             services.ConfigureCorsServices(Configuration);
             services.AddHttpClient();
@@ -148,6 +152,8 @@ namespace Test.WebApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware(typeof(GlobalErrorHandlingMiddleware));
 
             app.UseEndpoints(endpoints =>
             {

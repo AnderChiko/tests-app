@@ -9,6 +9,9 @@ namespace Test.Core.Models.Data
 {
     public class DataResult<T> : IDataResult<T>
     {
+        public DataResult()
+        {
+        }
         public DataResult( T entry)
         {
             Data = entry;

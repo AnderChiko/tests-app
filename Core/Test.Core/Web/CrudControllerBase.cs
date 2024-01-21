@@ -11,6 +11,8 @@ namespace Test.Core.Web
     /// <typeparam name="TModel"></typeparam>
     public abstract class CrudControllerBase<TController, IManager, TModel, TKey> :  ControllerBase, ICrudController<TModel, TKey>
         where IManager : ICrudManager<TModel, TKey>
+        where TKey : IEquatable<TKey>
+        where TModel : class, new()
     {
         protected IManager _manager;
         private string modelName;
@@ -39,6 +41,7 @@ namespace Test.Core.Web
             }
             catch (Exception ex)
             {
+                // to implement error middleware
                 return BuildAndLogErrorActionResult(ex, $"{modelName}:GetById", $"{modelName}:Get", "all");
             }
         }
@@ -105,7 +108,7 @@ namespace Test.Core.Web
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Result>> Delete(TKey id)
+        public async Task<ActionResult<DataResult<Result>>> Delete(TKey id)
         {
             try
             {

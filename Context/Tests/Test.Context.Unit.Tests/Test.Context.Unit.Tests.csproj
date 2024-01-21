@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\Test.Core.Testing\Test.Core.Testing.csproj" />
+    <ProjectReference Include="..\..\Test.Context\Test.Context.csproj" />
   </ItemGroup>
 
 </Project>

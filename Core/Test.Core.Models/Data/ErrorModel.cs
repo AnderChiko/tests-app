@@ -9,9 +9,8 @@ namespace Test.Core.Models.Data
     public class ErrorModel
     {
         public int? Code { get; set; }
-
-        public string? Status { get; set; }
-
         public string? Message { get; set; }
+
+        public string? StackTrace { get; set; }
     }
 }

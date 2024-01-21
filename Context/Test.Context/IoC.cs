@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Test.Context.Infrastructure;
+using Test.Context.Repositories.Implementations;
+using Test.Context.Repositories.Interfaces;
 
 namespace Test.Context
 {
@@ -25,6 +28,12 @@ namespace Test.Context
         public static IServiceCollection AddContextIoC(this IServiceCollection services)
         {
             services.AddTransient<TestContext, TestContext>();
+
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ITasksRepository, TasksRepository>();
+            services.AddTransient<IDbContextGenerator, DbContextGenerator>();
+           
+            services.AddTransient<ITestContext, TestContext>();
 
             return services;
         }

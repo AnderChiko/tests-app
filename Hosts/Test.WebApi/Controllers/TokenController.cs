@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Test.BusinessLogic.Authentication;
 using Test.BusinessLogic.Models.Authentication;
+using Test.Core.Models;
+using Test.Core.Models.Data;
+using Test.Core.Models.Exceptions;
+using Test.Core.Models.Security;
 
 namespace Test.WebApi.Controllers
 {
@@ -18,14 +22,21 @@ namespace Test.WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("Authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] UserCredintial userCredintial)
+        public async Task<TokenRespnse> Authenticate([FromBody] UserCredintial userCredintial)
         {
+            // add validation model
 
             var token = await _jwtTokenManager.Authenticate(userCredintial.Username, userCredintial.Password);
             if (string.IsNullOrEmpty(token))
-                return Unauthorized();
+                throw new UnauthorizedAccessException("Unauthorized user!");
 
-            return Ok(token);
+            return new TokenRespnse()
+            {
+                Data = new TokenResponeModel()
+                {
+                    Token = token
+                }
+            };
         }
 
     }

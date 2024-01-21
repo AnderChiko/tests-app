@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 namespace Test.Core.Interfaces.Data
 {
     public interface ICrudManager<T, TKey>
+        where T : class, new()
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Get by id
@@ -17,6 +19,7 @@ namespace Test.Core.Interfaces.Data
         /// <returns></returns>
         Task<DataResult<T>> Get(TKey id);
 
+
         /// <summary>
         /// Get by id
         /// </summary>
@@ -24,6 +27,7 @@ namespace Test.Core.Interfaces.Data
         /// <returns></returns>
         Task<DataResult<List<T>>> Get();
 
+       
         /// <summary>
         /// Update
         /// </summary>
@@ -43,6 +47,6 @@ namespace Test.Core.Interfaces.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Result> Delete(TKey id);
+        Task<DataResult<Result>> Delete(TKey id);
     }
 }

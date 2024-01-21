@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 namespace Test.Core.Interfaces.Web
 {
     public interface ICrudController<T, TKey>
+        where TKey : IEquatable<TKey>
+        where T : class, new()
     {
         Task<ActionResult<DataResult<List<T>>>> Get();
 
@@ -18,6 +20,6 @@ namespace Test.Core.Interfaces.Web
 
         Task<ActionResult<DataResult<T>>> Put([FromBody] T entry);
 
-        Task<ActionResult<Result>> Delete(TKey id);
+        Task<ActionResult<DataResult<Result>>> Delete(TKey id);
     }
 }

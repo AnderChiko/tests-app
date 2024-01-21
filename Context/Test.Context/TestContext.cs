@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using Test.Context.Configurations;
+using Test.Context.Infrastructure;
 #nullable disable
 
 namespace Test.Context
 {
-    public partial class TestContext : DbContext
+    public partial class TestContext : DbContext, ITestContext
     {
         public TestContext(DbContextOptions<TestContext> options)
             : base(options)

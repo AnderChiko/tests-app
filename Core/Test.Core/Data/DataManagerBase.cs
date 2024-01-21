@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using Test.Core.Interfaces.Data;
 using Test.Core.Models.Data;
 
@@ -13,24 +10,24 @@ namespace Test.Core.Data
     /// </summary>
     /// <typeparam name="TModel">Model passed in</typeparam>
     /// <typeparam name="TKey">Type of database primary key</typeparam>
-    /// <typeparam name="TDbContext">Database context passed in</typeparam>
-    public abstract class DataManagerBase<TSourceModel, TModel, TKey, TDbContext> : ICrudManager<TModel, TKey>
-        where TDbContext : DbContext
+    public abstract class DataManagerBase<DtoModel, TModel, TKey> : ICrudManager<TModel, TKey>
         where TModel : class, new()
-        where TSourceModel : class, new()
+        where DtoModel : class, new()
+        where TKey : IEquatable<TKey>
     {
-        protected readonly IServiceProvider _serviceProvider;
-        protected MapperConfiguration _mapperConfiguration;
-        protected IMapper _mapper;
-        protected virtual TDbContext GetDbContext()
+        protected readonly IMapper _mapper;
+        protected readonly DbContext _dbContext;
+
+        protected DataManagerBase(DbContext dbContext, IMapper mapper)
         {
-            return _serviceProvider.GetRequiredService<TDbContext>();
+            _mapper = mapper;
+            _dbContext = dbContext;
         }
 
-        protected DataManagerBase(IServiceProvider serviceProvider, IMapper mapper)
+
+        public TModel CreateModel()
         {
-            _serviceProvider = serviceProvider;
-            _mapper = mapper;
+            return new TModel();
         }
 
         /// <summary>
@@ -41,16 +38,14 @@ namespace Test.Core.Data
         public virtual async Task<DataResult<TModel>> Create(TModel entry)
         {
             // map to db entries
-            var dbEntry = _mapper.Map<TSourceModel>(entry);
+            var dbEntry = _mapper.Map<DtoModel>(entry);
 
-            using (var dbContext = GetDbContext())
-            {
-                dbContext.Entry(dbEntry).State = EntityState.Added;
-                var contextResult = dbContext.Add(dbEntry);
-                await dbContext.SaveChangesAsync();
+            _dbContext.Entry(dbEntry).State = EntityState.Added;
+            var contextResult = _dbContext.Add(dbEntry);
+            await _dbContext.SaveChangesAsync();
 
-                return new DataResult<TModel>(_mapper.Map<TModel>(contextResult.Entity));
-            }
+            return new DataResult<TModel>(_mapper.Map<TModel>(contextResult.Entity));
+
         }
 
         /// <summary>
@@ -61,16 +56,13 @@ namespace Test.Core.Data
         public virtual async Task<DataResult<TModel>> Update(TModel entry)
         {
             // map to db entries
-            var dbEntry = _mapper.Map<TSourceModel>(entry);
+            var dbEntry = _mapper.Map<DtoModel>(entry);
 
-            using (var dbContext = GetDbContext())
-            {
-                dbContext.Entry(dbEntry).State = EntityState.Modified;
-                var contextResult = dbContext.Update(dbEntry);
-                await dbContext.SaveChangesAsync();
+            _dbContext.Entry(dbEntry).State = EntityState.Modified;
+            var contextResult = _dbContext.Update(dbEntry);
+            await _dbContext.SaveChangesAsync();
 
-                return new DataResult<TModel>(_mapper.Map<TModel>(contextResult.Entity));
-            }
+            return new DataResult<TModel>(_mapper.Map<TModel>(contextResult.Entity));
         }
 
         /// <summary>
@@ -78,19 +70,16 @@ namespace Test.Core.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<Result> Delete(TKey id)
+        public virtual async Task<DataResult<Result>> Delete(TKey id)
         {
 
-            using (var dbContext = GetDbContext())
-            {
-                var dbSet = dbContext.Set<TSourceModel>();
+                var dbSet = _dbContext.Set<DtoModel>();
                 var entry = await dbSet.FindAsync(id);
-                dbContext.Entry(entry).State = EntityState.Deleted;
+               var dbResult = _dbContext.Entry(entry).State = EntityState.Deleted;
 
-                await dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
-                return new Result(Status.Success, "Successfully Deleted");
-            }
+                return new DataResult<Result>(new Result(Status.Success, "Successfully Deleted")) ;
         }
 
         /// <summary>
@@ -101,19 +90,16 @@ namespace Test.Core.Data
         public virtual async Task<DataResult<List<TModel>>> Create(List<TModel> entries)
         {
             // map to db entries
-            var dbEntry = _mapper.Map<List<TSourceModel>>(entries);
+            var dbEntry = _mapper.Map<List<DtoModel>>(entries);
 
-            using (var dbContext = GetDbContext())
-            {
-                var dbSet = dbContext.Set<TSourceModel>();
+                var dbSet = _dbContext.Set<DtoModel>();
                 dbSet.AddRange(dbEntry);
 
-                await dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
                 var result = new DataResult<List<TModel>>(entries);
 
                 return result;
-            }
         }
 
         /// <summary>
@@ -124,17 +110,14 @@ namespace Test.Core.Data
         public virtual async Task<DataResult<List<TModel>>> Update(List<TModel> entries)
         {
             // map to db entries
-            var dbEntry = _mapper.Map<List<TSourceModel>>(entries);
+            var dbEntry = _mapper.Map<List<DtoModel>>(entries);
 
-            using (var dbContext = GetDbContext())
-            {
-                var dbSet = dbContext.Set<TSourceModel>();
+                var dbSet = _dbContext.Set<DtoModel>();
                 dbSet.UpdateRange(dbEntry);
 
-                var result = await dbContext.SaveChangesAsync();
+                var result = await _dbContext.SaveChangesAsync();
 
-                return new DataResult<List<TModel>>( entries);
-            }
+                return new DataResult<List<TModel>>(entries);
         }
 
         /// <summary>
@@ -145,17 +128,14 @@ namespace Test.Core.Data
         public virtual async Task<Result> Delete(List<TModel> entry)
         {
             // map to db entries
-            var dbEntry = _mapper.Map<TSourceModel>(entry);
+            var dbEntry = _mapper.Map<DtoModel>(entry);
 
-            using (var dbContext = GetDbContext())
-            {
-                var dbSet = dbContext.Set<TSourceModel>();
+                var dbSet = _dbContext.Set<DtoModel>();
                 dbSet.RemoveRange(dbEntry);
 
-                await dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
                 return new Result(Status.Success, "Successfully Deleted");
-            }
         }
 
         /// <summary>
@@ -165,13 +145,11 @@ namespace Test.Core.Data
         /// <returns></returns>
         public virtual async Task<DataResult<TModel>> Get(TKey id)
         {
-            using (var dbContext = GetDbContext())
-            {
-                var dbSet = dbContext.Set<TSourceModel>();
+            
+                var dbSet = _dbContext.Set<DtoModel>();
                 var contextResult = await dbSet.FindAsync(id);
 
                 return new DataResult<TModel>(_mapper.Map<TModel>(contextResult));
-            }
         }
 
         /// <summary>
@@ -181,13 +159,11 @@ namespace Test.Core.Data
         /// <returns></returns>
         public virtual async Task<DataResult<List<TModel>>> Get()
         {
-            using (var dbContext = GetDbContext())
-            {
-                var dbSet = dbContext.Set<TSourceModel>();
-                var contextResult = await dbSet.ToListAsync();
+           
+            var dbSet = _dbContext.Set<DtoModel>();
+            var contextResult = await dbSet.ToListAsync();
 
-                return new DataResult<List<TModel>>(_mapper.Map<List<TModel>>(contextResult));
-            }
+            return new DataResult<List<TModel>>(_mapper.Map<List<TModel>>(contextResult));
         }
 
         private TModel SetValue(TModel entry, string propertyName, object value)
@@ -212,5 +188,9 @@ namespace Test.Core.Data
             return entry;
         }
 
+        public DataResult<List<TModel>> GetAll()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
