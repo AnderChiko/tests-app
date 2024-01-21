@@ -25,3 +25,9 @@ CREATE TABLE [dbo].[Task](
 	[DueDate] Date NULL
 	);
 GO
+
+GO
+
+INSERT INTO [dbo].[User] ([Username] ,[Email] ,[Password] ,[Active] ,[CreatedTime])
+     VALUES ('string','string','string',	1 ,getdate())
+GO
